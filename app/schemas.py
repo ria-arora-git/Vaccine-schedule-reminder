@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import date
-from typing import Optional
+
 
 class ChildBase(BaseModel):
     name: str
@@ -11,24 +11,43 @@ class ChildBase(BaseModel):
 class ChildCreate(ChildBase):
     pass
 
+
+class Child(ChildBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
 class VaccineBase(BaseModel):
     name: str
     due_age_weeks: int
 
+
 class VaccineCreate(VaccineBase):
     pass
 
+
+class Vaccine(VaccineBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
 class ScheduleBase(BaseModel):
     child_id: int
-    vaccine_id: int
+    vaccine_name: str
     scheduled_date: date
+
 
 class ScheduleCreate(ScheduleBase):
     pass
+
 
 class Schedule(ScheduleBase):
     id: int
     done: bool
 
     class Config:
-        orm_mode = True
+        from_attributes = True

@@ -12,17 +12,28 @@ def check_reminders():
     db = SessionLocal()
     today = date.today()
 
-    schedules = db.query(models.Schedule).filter(models.Schedule.done == False).all()
+    schedules = db.query(models.Schedule).filter(
+        models.Schedule.done == False
+    ).all()
 
     for s in schedules:
-        if True:
-            print(f"Sending reminder for {s.id}")
-            send_reminder(
-                s.child.parent_email,
-                "Upcoming Vaccine",
-                s.scheduled_date
-            )
+        if s.scheduled_date <= today:
+            print(f"Sending reminder for schedule ID {s.id}")
+
+            if s.child.parent_email:
+                send_reminder(
+                    s.child.parent_email,
+                    "Vaccine Reminder",
+                    s.scheduled_date
+                )
 
     db.close()
 
-scheduler.add_job(check_reminders, "interval", minutes=1)
+
+scheduler.add_job(
+    check_reminders,
+    "cron",
+    day_of_week="mon",
+    hour=9,
+    minute=0
+)
