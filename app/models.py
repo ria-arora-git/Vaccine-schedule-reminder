@@ -7,21 +7,11 @@ class Child(Base):
     __tablename__ = "children"
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
-    parent_email = Column(String, nullable=False)
-    birth_date = Column(Date, nullable=False)
+    name = Column(String)
+    parent_email = Column(String)
+    birth_date = Column(Date)
 
     schedules = relationship("Schedule", back_populates="child")
-
-
-class Vaccine(Base):
-    __tablename__ = "vaccines"
-
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False)
-    due_age_weeks = Column(Integer, nullable=False)
-
-    schedules = relationship("Schedule", back_populates="vaccine")
 
 
 class Schedule(Base):
@@ -34,4 +24,3 @@ class Schedule(Base):
     done = Column(Boolean, default=False)
 
     child = relationship("Child", back_populates="schedules")
-    vaccine = relationship("Vaccine", back_populates="schedules")
