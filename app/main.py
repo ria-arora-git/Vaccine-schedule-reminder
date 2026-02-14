@@ -45,27 +45,15 @@ async def upload_sheet(
         vaccine_name = vac["vaccine_name"]
         weeks = vac["due_age_weeks"]
 
-        vaccine = db.query(models.Vaccine).filter(
-            models.Vaccine.name == vaccine_name
-        ).first()
-
-        if not vaccine:
-            vaccine = models.Vaccine(
-                name=vaccine_name,
-                due_age_weeks=weeks
-            )
-            db.add(vaccine)
-            db.commit()
-            db.refresh(vaccine)
-
         due_date = child.birth_date + timedelta(weeks=weeks)
 
         new_schedule = models.Schedule(
             child_id=child_id,
-            vaccine_id=vaccine.id,
+            vaccine_name=vaccine_name,
             scheduled_date=due_date,
             done=False
         )
+
 
         db.add(new_schedule)
 
@@ -145,17 +133,16 @@ def get_pending(db: Session = Depends(get_db)):
         models.Schedule.done == False
     ).all()
 
-    result = []
-
-    for s in schedules:
-        result.append({
+    return [
+        {
             "id": s.id,
             "child_name": s.child.name,
-            "vaccine_name": s.vaccine.name,
+            "vaccine_name": s.vaccine_name,
             "scheduled_date": str(s.scheduled_date)
-        })
+        }
+        for s in schedules
+    ]
 
-    return result
 
 
 @app.put("/mark-done/{schedule_id}")
