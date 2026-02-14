@@ -138,9 +138,12 @@ elif menu == "View Pending":
             st.success("No pending vaccines!!")
         else:
             for item in data:
-                st.write(
-                    f"👶 {item['child_name']} | 💉 {item['vaccine_name']} | 📅 Due: {item['scheduled_date']}"
-                )
+                col1, col2, col3 = st.columns([2, 2, 2])
+
+                col1.write(f"{item['child_name']}")
+                col2.write(f"💉 {item['vaccine_name']}")
+                col3.write(f"📅 Due: {item['scheduled_date']}")
+
 
                 if st.button(f"Mark Done {item['id']}"):
                     done_resp = requests.put(
