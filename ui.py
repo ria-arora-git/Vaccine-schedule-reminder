@@ -5,7 +5,7 @@ API_BASE = "http://127.0.0.1:8000"
 
 st.set_page_config(page_title="Vaccine Reminder")
 
-st.title("🍼 Vaccine Reminder App")
+st.title("Vaccine Reminder App")
 
 st.sidebar.title("Menu")
 
@@ -135,7 +135,7 @@ elif menu == "View Pending":
         data = response.json()
 
         if not data:
-            st.success("No pending vaccines 🎉")
+            st.success("No pending vaccines!!")
         else:
             for item in data:
                 st.write(
